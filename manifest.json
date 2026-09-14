@@ -1,0 +1,10 @@
+{
+  "name": "ตารางเข้าเวร สภ.เมืองสงขลา",
+  "short_name": "ตารางเข้าเวร",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eef3f8",
+  "theme_color": "#123c69",
+  "lang": "th",
+  "icons": []
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123c69">
+<link rel="manifest" href="manifest.json">
+<title>ตารางเข้าเวร สภ.เมืองสงขลา</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;background:#eef3f8;color:#17324d}
+.app{max-width:480px;margin:auto;min-height:100vh;background:#fff}.top{background:#123c69;color:#fff;padding:28px 20px 22px;border-radius:0 0 24px 24px}
+.logo{width:64px;height:64px;border-radius:18px;background:#fff;color:#123c69;display:grid;place-items:center;font-size:30px;margin-bottom:12px}
+h1{font-size:22px;margin:0 0 5px}.sub{opacity:.85;font-size:13px}.page{padding:20px}.card{background:#fff;border:1px solid #e1e8ef;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 5px 18px #123c6912}
+label{display:block;font-size:13px;margin:12px 0 6px;font-weight:700}input,select{width:100%;padding:13px;border:1px solid #ccd7e2;border-radius:12px;font-size:15px}button{border:0;border-radius:12px;padding:13px 16px;font-weight:700;font-size:15px;cursor:pointer}.primary{background:#123c69;color:#fff;width:100%;margin-top:16px}.secondary{background:#e9f0f7;color:#123c69}.danger{background:#fee2e2;color:#991b1b}.hidden{display:none}.nav{position:sticky;bottom:0;background:#fff;border-top:1px solid #e1e8ef;display:flex;padding:8px;gap:5px}.nav button{flex:1;background:#fff;color:#597087;font-size:11px;padding:9px 3px}.nav button.active{background:#e9f0f7;color:#123c69}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.badge{padding:5px 9px;border-radius:999px;background:#e8f5e9;color:#23733a;font-size:12px;font-weight:700}.shift{border-left:5px solid #123c69;padding-left:12px}.muted{color:#718096;font-size:13px}.title{font-size:18px;font-weight:800;margin-bottom:12px}.notice{padding:12px;border-radius:12px;background:#fff8e1;margin:8px 0}.small{font-size:12px}.login{padding:28px 22px}.center{text-align:center}.error{color:#b91c1c;font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<div id="login" class="login">
+<div class="center" style="padding-top:35px">
+<div class="logo" style="margin:0 auto 15px">👮</div>
+<h1>ตารางเข้าเวร สภ.เมืองสงขลา</h1><p class="muted">ระบบจัดตารางการปฏิบัติหน้าที่</p>
+</div>
+<div class="card" style="margin-top:25px">
+<label>ชื่อผู้ใช้</label><input id="user" placeholder="เช่น officer01">
+<label>รหัสผ่าน</label><input id="pass" type="password" placeholder="กรอกรหัสผ่าน">
+<button class="primary" onclick="login()">เข้าสู่ระบบ</button>
+<div id="err" class="error"></div>
+<p class="small muted">บัญชีทดลอง: officer01 / 1234 &nbsp; | &nbsp; admin / admin123</p>
+</div>
+</div>
+
+<div id="main" class="hidden">
+<header class="top"><div class="logo">👮</div><h1>สภ.เมืองสงขลา</h1><div class="sub" id="welcome">ระบบตารางเข้าเวร</div></header>
+<section id="home" class="page">
+<div class="title">หน้าหลัก</div>
+<div class="card"><div class="row"><div><b>เวรวันนี้</b><div class="muted">14 กันยายน 2569</div></div><span class="badge">ปฏิบัติหน้าที่</span></div><hr>
+<div class="shift"><b>เวรผลัดที่ 1</b><div>08:00 – 16:00 น.</div><div class="muted">สายตรวจ / ศูนย์วิทยุ</div></div></div>
+<div class="card"><b>สรุปตารางของฉัน</b><div class="row" style="margin-top:12px"><span>เวรสัปดาห์นี้</span><b>4 เวร</b></div><div class="row"><span>เวรถัดไป</span><b>15 ก.ย. 08:00 น.</b></div></div>
+</section>
+
+<section id="schedule" class="page hidden">
+<div class="title">ตารางการเข้าเวร</div>
+<div class="card"><select onchange="renderSchedule(this.value)"><option value="all">ทุกวัน</option><option>14 ก.ย. 2569</option><option>15 ก.ย. 2569</option><option>16 ก.ย. 2569</option></select></div>
+<div id="scheduleList"></div>
+</section>
+
+<section id="notify" class="page hidden">
+<div class="title">แจ้งเตือน</div>
+<div class="card"><div class="notice"><b>🔔 แจ้งเตือนเวร</b><br><span class="small">พรุ่งนี้มีเวรผลัดที่ 1 เวลา 08:00 น.</span></div>
+<div class="notice"><b>📅 อัปเดตตาราง</b><br><span class="small">ตารางเวรประจำสัปดาห์ได้รับการอัปเดตแล้ว</span></div></div>
+</section>
+
+<section id="admin" class="page hidden">
+<div class="title">สำหรับผู้ดูแลระบบ</div>
+<div class="card"><b>จัดการตารางเวร</b><p class="muted">เพิ่ม แก้ไข และตรวจสอบตารางการปฏิบัติหน้าที่</p>
+<button class="secondary" onclick="addDemo()">＋ เพิ่มตารางตัวอย่าง</button>
+<button class="secondary" style="margin-left:6px" onclick="alert('เปิดเมนูแก้ไขตารางเวร')">แก้ไข</button></div>
+<div class="card"><b>จัดการผู้ใช้งาน</b><p class="muted">เจ้าหน้าที่ในระบบ 24 คน</p><button class="secondary" onclick="alert('เมนูจัดการผู้ใช้งาน')">จัดการบัญชี</button></div>
+</section>
+
+<div class="nav">
+<button id="n-home" class="active" onclick="show('home')">🏠<br>หน้าหลัก</button>
+<button id="n-schedule" onclick="show('schedule')">📅<br>ตารางเวร</button>
+<button id="n-notify" onclick="show('notify')">🔔<br>แจ้งเตือน</button>
+<button id="n-admin" class="hidden" onclick="show('admin')">⚙️<br>ผู้ดูแล</button>
+<button onclick="logout()">ออก</button>
+</div>
+</div>
+</div>
+<script>
+const data=[
+["14 ก.ย. 2569","ผลัดที่ 1","08:00 – 16:00 น.","สายตรวจ / ศูนย์วิทยุ"],
+["15 ก.ย. 2569","ผลัดที่ 1","08:00 – 16:00 น.","งานป้องกันปราบปราม"],
+["16 ก.ย. 2569","ผลัดที่ 2","16:00 – 00:00 น.","สายตรวจ"],
+["17 ก.ย. 2569","ผลัดที่ 3","00:00 – 08:00 น.","ศูนย์วิทยุ"]
+];
+function login(){let u=document.getElementById('user').value.trim(),p=document.getElementById('pass').value;if((u==='officer01'&&p==='1234')||(u==='admin'&&p==='admin123')){sessionStorage.setItem('role',u==='admin'?'admin':'officer');document.getElementById('login').classList.add('hidden');document.getElementById('main').classList.remove('hidden');document.getElementById('welcome').textContent='เข้าสู่ระบบ: '+u; if(u==='admin')document.getElementById('n-admin').classList.remove('hidden');renderSchedule('all')}else document.getElementById('err').textContent='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'}
+function logout(){sessionStorage.clear();location.reload()}
+function show(id){['home','schedule','notify','admin'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));let n=document.getElementById('n-'+id);if(n)n.classList.add('active')}
+function renderSchedule(filter){document.getElementById('scheduleList').innerHTML=data.filter(x=>filter==='all'||x[0]===filter).map(x=>`<div class="card"><div class="row"><b>${x[0]}</b><span class="badge">เวร</span></div><div class="shift" style="margin-top:12px"><b>${x[1]}</b><div>${x[2]}</div><div class="muted">${x[3]}</div></div></div>`).join('')}
+function addDemo(){data.push(["18 ก.ย. 2569","ผลัดที่ 1","08:00 – 16:00 น.","งานจราจร"]);renderSchedule('all');alert('เพิ่มตารางตัวอย่างแล้ว')}
+</script>
+</body></html>
